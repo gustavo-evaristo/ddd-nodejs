@@ -1,11 +1,10 @@
 import { InMemoryQuestionRepository } from "@/test/repositories/in-memory-questions-repository";
 import { GetQuestionBySlugUseCase } from "./get-question-by-slug";
-import { CreateQuestionUseCase } from "./create-question";
+import { makeQuestion } from "@/test/factories/makeQuestion";
 
 describe("Get question by slug test", () => {
   let inMemoryQuestionRepository: InMemoryQuestionRepository;
   let getQuestionBySlugUseCase: GetQuestionBySlugUseCase;
-  let createQuestionUseCase: CreateQuestionUseCase;
 
   beforeEach(() => {
     inMemoryQuestionRepository = new InMemoryQuestionRepository();
@@ -13,18 +12,12 @@ describe("Get question by slug test", () => {
     getQuestionBySlugUseCase = new GetQuestionBySlugUseCase(
       inMemoryQuestionRepository
     );
-
-    createQuestionUseCase = new CreateQuestionUseCase(
-      inMemoryQuestionRepository
-    );
   });
 
   it("Should be able to get question by slug", async () => {
-    await createQuestionUseCase.execute({
-      authorId: "1",
-      title: "my-question",
-      content: "question content",
-    });
+    const newQuestion = makeQuestion();
+
+    await inMemoryQuestionRepository.create(newQuestion);
 
     const slug = "my-question";
 
@@ -32,7 +25,9 @@ describe("Get question by slug test", () => {
       slug,
     });
 
-    expect(question.slug.value).toBe(slug);
-    expect(inMemoryQuestionRepository.questions[0].slug.value).toBe(slug);
+    expect(question.slug.value).toBe(newQuestion.slug.value);
+    expect(inMemoryQuestionRepository.questions[0].slug.value).toBe(
+      newQuestion.slug.value
+    );
   });
 });

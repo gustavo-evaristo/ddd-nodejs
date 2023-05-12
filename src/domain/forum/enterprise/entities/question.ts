@@ -4,7 +4,7 @@ import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 import dayjs from "dayjs";
 
-interface QuestionProps {
+export interface QuestionProps {
   title: string;
   slug: Slug;
   content: string;
@@ -15,78 +15,78 @@ interface QuestionProps {
 }
 
 export class Question extends Entity<QuestionProps> {
-    static create(
-        props: Optional<QuestionProps, "createdAt" | "slug">,
-        id?: UniqueEntityID
-    ) {
-        const question = new Question(
-            {
-                ...props,
-                slug: props.slug ?? Slug.createFromText(props.title),
-                createdAt: new Date(),
-            },
-            id
-        );
+  static create(
+    props: Optional<QuestionProps, "createdAt" | "slug">,
+    id?: UniqueEntityID
+  ) {
+    const question = new Question(
+      {
+        ...props,
+        slug: props.slug ?? Slug.createFromText(props.title),
+        createdAt: new Date(),
+      },
+      id
+    );
 
-        return question;
-    }
+    return question;
+  }
 
-    get title() {
-        return this.props.title;
-    }
+  get title() {
+    return this.props.title;
+  }
 
-    get slug() {
-        return this.props.slug;
-    }
+  get slug() {
+    return this.props.slug;
+  }
 
-    get content() {
-        return this.props.content;
-    }
+  get content() {
+    return this.props.content;
+  }
 
-    get authorId() {
-        return this.props.authorId;
-    }
+  get authorId() {
+    return this.props.authorId;
+  }
 
-    get bestAnswerId() {
-        return this.props.bestAnswerId;
-    }
+  get bestAnswerId() {
+    return this.props.bestAnswerId;
+  }
 
-    get createdAt() {
-        return this.props.createdAt;
-    }
+  get createdAt() {
+    return this.props.createdAt;
+  }
 
-    get updatedAt() {
-        return this.props.updatedAt;
-    }
+  get updatedAt() {
+    return this.props.updatedAt;
+  }
 
-    get isNew(): boolean {
-        return dayjs().diff(this.createdAt, "days") <= 3;
-    }
+  get isNew(): boolean {
+    return dayjs().diff(this.createdAt, "days") <= 3;
+  }
 
-    get excerpt() {
-        return this.content.substring(0, 120).trimEnd().concat("...");
-    }
+  get excerpt() {
+    return this.content.substring(0, 120).trimEnd().concat("...");
+  }
 
-    private touch() {
-        this.props.updatedAt = new Date();
-    }
+  private touch() {
+    this.props.updatedAt = new Date();
+  }
 
-    set title(title: string) {
-        this.props.title = title;
-        this.props.slug = Slug.createFromText(title);
+  set title(title: string) {
+    this.props.title = title;
+    this.props.slug = Slug.createFromText(title);
 
-        this.touch();
-    }
+    this.touch();
+  }
 
-    set content(content: string) {
-        this.props.content = content;
+  set content(content: string) {
+    this.props.content = content;
 
-        this.touch();
-    }
+    this.touch();
+  }
 
-    set bestAnswerId(bestAnswerId: UniqueEntityID | undefined) {
-        this.props.bestAnswerId = bestAnswerId;
+  set bestAnswerId(bestAnswerId: UniqueEntityID | undefined) {
+    this.props.bestAnswerId = bestAnswerId;
 
-        this.touch();
-    }
+    this.touch();
+  }
 }
