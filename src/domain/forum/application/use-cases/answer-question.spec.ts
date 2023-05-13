@@ -1,7 +1,7 @@
 import { AnswerQuestionUseCase } from "./answer-question";
 import { InMemoryAnswersRepository } from "@/test/repositories/in-memory-answers-repository";
 
-describe("Answear question test", () => {
+describe("Answer question test", () => {
   let inMemoryAnswersRepository: InMemoryAnswersRepository;
   let answerQuestion: AnswerQuestionUseCase;
 
@@ -10,13 +10,13 @@ describe("Answear question test", () => {
     answerQuestion = new AnswerQuestionUseCase(inMemoryAnswersRepository);
   });
 
-  it("Should be able to create a answear question", async () => {
-    const answear = await answerQuestion.execute({
+  it("Should be able to create a answer question", async () => {
+    const answer = await answerQuestion.execute({
       content: "new content",
       instructorId: "1",
       questionId: "2",
     });
 
-    expect(answear.content).toBe("new content");
+    expect(answer.content).toBe("new content");
   });
 });

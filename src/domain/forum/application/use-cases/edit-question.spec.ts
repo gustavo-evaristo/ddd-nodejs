@@ -1,40 +1,47 @@
 import { InMemoryQuestionRepository } from "@/test/repositories/in-memory-questions-repository";
 import { makeQuestion } from "@/test/factories/makeQuestion";
-import { DeleteQuestionUseCase } from "./delete-question";
+import { EditQuestionUseCase } from "./edit-question";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
-describe("Delete Question test", () => {
+describe("Edit Question test", () => {
   let inMemoryQuestionRepository: InMemoryQuestionRepository;
-  let deleteQuestion: DeleteQuestionUseCase;
+  let editQuestion: EditQuestionUseCase;
 
   beforeEach(() => {
     inMemoryQuestionRepository = new InMemoryQuestionRepository();
 
-    deleteQuestion = new DeleteQuestionUseCase(inMemoryQuestionRepository);
+    editQuestion = new EditQuestionUseCase(inMemoryQuestionRepository);
   });
 
-  it("Should be able to delete a question", async () => {
+  it("Should be able to edit a question", async () => {
     const question = makeQuestion({ authorId: new UniqueEntityID("1") });
 
     await inMemoryQuestionRepository.create(question);
 
-    await deleteQuestion.execute({
-      authorId: "1",
+    await editQuestion.execute({
       questionId: question.id.toString(),
+      authorId: question.authorId.toString(),
+      title: "new title",
+      content: "new content",
     });
 
-    expect(inMemoryQuestionRepository.questions).toHaveLength(0);
+    expect(inMemoryQuestionRepository.questions[0]).toMatchObject({
+      title: "new title",
+      content: "new content",
+    });
   });
 
-  it("Should not be able to delete a question from another user", async () => {
+  it("Should not be able to edit a question from another user", async () => {
     const question = makeQuestion({ authorId: new UniqueEntityID("1") });
 
     await inMemoryQuestionRepository.create(question);
 
     expect(async () =>
-      deleteQuestion.execute({
+      editQuestion.execute({
         authorId: "2",
         questionId: question.id.toString(),
+        title: "new title",
+        content: "new content",
       })
     ).rejects.toThrowError("Not allowed");
   });
