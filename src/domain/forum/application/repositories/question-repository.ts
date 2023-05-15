@@ -1,4 +1,3 @@
-import { Answer } from "../../enterprise/entities/answer";
 import { Question } from "../../enterprise/entities/question";
 
 export interface QuestionRepository {
@@ -6,5 +5,5 @@ export interface QuestionRepository {
   findBySlug(slug: string): Promise<Question | null>;
   delete(question: Question): Promise<void>;
   findById(id: string): Promise<Question | null>;
-  save(question: Question): Promise<void>;
+  save(question: Question): Promise<Question>;
 }
